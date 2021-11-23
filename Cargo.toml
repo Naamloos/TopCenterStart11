@@ -7,3 +7,6 @@ edition = "2021"
 
 [dependencies]
 winapi = { version = "0.3", features = ["winuser"] }
+
+[target.'cfg(windows)'.build-dependencies]
+winres = "0.1"
