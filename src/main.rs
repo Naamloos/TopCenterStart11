@@ -1,4 +1,4 @@
-#![windows_subsystem = "windows"] // yeah I know this is a bit weird but it hides the console
+//#![windows_subsystem = "windows"] // yeah I know this is a bit weird but it hides the console
 
 use std::mem::zeroed;
 use std::ffi::CString;
@@ -45,6 +45,12 @@ fn main()
             // correctly place thumbnail window
             place_window_under_taskbar(thumbnail_wnd, 48);
 
+            // These should be the notification panel and control panel, but IO can't get them to work as of right now.
+            // let control_wnd : HWND = find_hwnd("Windows.UI.Core.CoreWindow", Some("Control Center"));
+            // let notif_wnd : HWND = find_hwnd("Windows.UI.Core.CoreWindow", Some("Notification Center"));
+            // place_window_under_taskbar(control_wnd, 48);
+            // place_window_under_taskbar(notif_wnd, 48);
+
             // wait a little bit before next tick
             thread::sleep(timeout);
         }
@@ -90,16 +96,3 @@ fn place_window_under_taskbar(window : HWND, pos : i32)
         }
     }
 }
-
-/*
-    Note to self:
-    class name: Windows.UI.Core.CoreWindow
-    window name: Notification Center
-    has it's own height so moving it to y=48 would be easy enough! :)
-
-    same for:
-    class name: Windows.UI.Core.CoreWindow
-    window name: Control Center
-
-    Not sure what's going on with the keyboard language switcher but it should be easy enough to figure out.
-*/
