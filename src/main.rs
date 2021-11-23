@@ -1,4 +1,5 @@
 #![windows_subsystem = "windows"] // yeah I know this is a bit weird but it hides the console
+
 use std::mem::zeroed;
 use std::ffi::CString;
 use std::{thread, time};
@@ -37,12 +38,23 @@ fn main()
         let timeout = time::Duration::from_millis(100);
         let thumbnail_class : CString = CString::new("TaskListThumbnailWnd").expect("Whope");
 
+        // There's a window that has the same class, but the one we want has no title.
+        let desktop_switcher_class : CString = CString::new("XamlExplorerHostIslandWindow").expect("Whope");
+        let desktop_switcher_name : CString = CString::new("").expect("Whope");
+
         let thumbnail_wnd : HWND = winuser::FindWindowA(thumbnail_class.as_ptr(), std::ptr::null());
         let mut thumbnail_window_rect : RECT = zeroed();
         let mut thumbnail_client_rect : RECT = zeroed();
         loop
         {
-            //let desktop_switcher_wnd : HWND = winuser::FindWindowA(desktop_switcher_class.as_ptr(), desktop_switcher_name.as_ptr());
+            let desktop_switcher_wnd : HWND = winuser::FindWindowA(desktop_switcher_class.as_ptr(), desktop_switcher_name.as_ptr());
+            if !desktop_switcher_wnd.is_null()
+            {
+                // height 196
+                // width dev_mode.dmPelsWidth
+                let width = dev_mode.dmPelsWidth as i32;
+                winuser::SetWindowPos(desktop_switcher_wnd, winuser::HWND_TOP, 0, 48, width, 196, 0);
+            }
 
             // Get window and client rect for thumbnails
             winuser::GetWindowRect(thumbnail_wnd, &mut thumbnail_window_rect);
