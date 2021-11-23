@@ -1,8 +1,11 @@
+#![windows_subsystem = "windows"] // yeah I know this is a bit weird but it hides the console
 use std::mem::zeroed;
 use std::ffi::CString;
+use std::{thread, time};
 
 use winapi::shared::windef::HWND;
 use winapi::um::winuser;
+use winapi::shared::windef::RECT;
 
 fn main() 
 {
@@ -28,5 +31,30 @@ fn main()
         // Start menu is 666 by 750 pixels (including the padding which is part of the actual window)
 
         println!("Moved start menu to x:{} y:48", x_pos);
+
+        println!("Activating thumbnail position loop");
+
+        let timeout = time::Duration::from_millis(100);
+        let thumbnail_class : CString = CString::new("TaskListThumbnailWnd").expect("Whope");
+
+        let thumbnail_wnd : HWND = winuser::FindWindowA(thumbnail_class.as_ptr(), std::ptr::null());
+        let mut thumbnail_window_rect : RECT = zeroed();
+        let mut thumbnail_client_rect : RECT = zeroed();
+        loop
+        {
+            //let desktop_switcher_wnd : HWND = winuser::FindWindowA(desktop_switcher_class.as_ptr(), desktop_switcher_name.as_ptr());
+
+            // Get window and client rect for thumbnails
+            winuser::GetWindowRect(thumbnail_wnd, &mut thumbnail_window_rect);
+            winuser::GetClientRect(thumbnail_wnd, &mut thumbnail_client_rect);
+            // set new position
+            if thumbnail_window_rect.top != 48 // 48 is the height of the taskbar
+            {
+                // if the y pos changed, we can be sure the window moved.
+                winuser::SetWindowPos(thumbnail_wnd, winuser::HWND_TOP, thumbnail_window_rect.left, 48, thumbnail_client_rect.right, thumbnail_client_rect.bottom, 0);
+            }
+            // wait before next check
+            thread::sleep(timeout);
+        }
     }
 }
