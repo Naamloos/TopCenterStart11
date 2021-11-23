@@ -70,3 +70,16 @@ fn main()
         }
     }
 }
+
+/*
+    Note to self:
+    class name: Windows.UI.Core.CoreWindow
+    window name: Notification Center
+    has it's own height so moving it to y=48 would be easy enough! :)
+
+    same for:
+    class name: Windows.UI.Core.CoreWindow
+    window name: Control Center
+
+    Not sure what's going on with the keyboard language switcher but it should be easy enough to figure out.
+*/
