@@ -12,14 +12,10 @@ fn main()
 {
     println!("Let's fix what Microsoft couldn't!");
 
-    // define strings for the class name and window name for the start menu
-    let class_name : CString = CString::new("Windows.UI.Core.CoreWindow").expect("Whope");
-    let window_name : CString = CString::new("Start").expect("Whope");
-
     unsafe
     {
         // Grab the window handle to the start menu
-        let wnd : HWND = winuser::FindWindowA(class_name.as_ptr(), window_name.as_ptr());
+        let wnd : HWND = find_hwnd("Windows.UI.Core.CoreWindow", Some("Start"));
 
         // initialize the DEVMODEA struct. For sonme reason, default still does not work.
         let mut dev_mode = zeroed();
@@ -30,43 +26,67 @@ fn main()
         let x_pos = ((dev_mode.dmPelsWidth / 2) - (666 / 2)) as i32;
         winuser::SetWindowPos(wnd, winuser::HWND_TOPMOST, x_pos, 48, 666, 750, 0);
         // Start menu is 666 by 750 pixels (including the padding which is part of the actual window)
-
+        // Start needs some extra configuring because it is completely misplaced.
+        // The other windows only really need adjustment on their Y-pos
         println!("Moved start menu to x:{} y:48", x_pos);
 
-        println!("Activating thumbnail position loop");
-
+        println!("Starting placement-fix loop");
+        // Define a timeout
         let timeout = time::Duration::from_millis(100);
-        let thumbnail_class : CString = CString::new("TaskListThumbnailWnd").expect("Whope");
+        // Pre-fetch thumbnail wnd. This shouldn't change during the OS lifetime.
+        let thumbnail_wnd : HWND = find_hwnd("TaskListThumbnailWnd", None);
 
-        // There's a window that has the same class, but the one we want has no title.
-        let desktop_switcher_class : CString = CString::new("XamlExplorerHostIslandWindow").expect("Whope");
-        let desktop_switcher_name : CString = CString::new("").expect("Whope");
-
-        let thumbnail_wnd : HWND = winuser::FindWindowA(thumbnail_class.as_ptr(), std::ptr::null());
-        let mut thumbnail_window_rect : RECT = zeroed();
-        let mut thumbnail_client_rect : RECT = zeroed();
         loop
         {
-            let desktop_switcher_wnd : HWND = winuser::FindWindowA(desktop_switcher_class.as_ptr(), desktop_switcher_name.as_ptr());
-            if !desktop_switcher_wnd.is_null()
-            {
-                // height 196
-                // width dev_mode.dmPelsWidth
-                let width = dev_mode.dmPelsWidth as i32;
-                winuser::SetWindowPos(desktop_switcher_wnd, winuser::HWND_TOP, 0, 48, width, 196, 0);
-            }
+            // grab desktop switcher wnd and check whether it exists.
+            let desktop_switcher_wnd : HWND = find_hwnd("XamlExplorerHostIslandWindow", Some(""));
+            place_window_under_taskbar(desktop_switcher_wnd, 48);
 
-            // Get window and client rect for thumbnails
-            winuser::GetWindowRect(thumbnail_wnd, &mut thumbnail_window_rect);
-            winuser::GetClientRect(thumbnail_wnd, &mut thumbnail_client_rect);
-            // set new position
-            if thumbnail_window_rect.top != 48 // 48 is the height of the taskbar
-            {
-                // if the y pos changed, we can be sure the window moved.
-                winuser::SetWindowPos(thumbnail_wnd, winuser::HWND_TOP, thumbnail_window_rect.left, 48, thumbnail_client_rect.right, thumbnail_client_rect.bottom, 0);
-            }
-            // wait before next check
+            // correctly place thumbnail window
+            place_window_under_taskbar(thumbnail_wnd, 48);
+
+            // wait a little bit before next tick
             thread::sleep(timeout);
+        }
+    }
+}
+
+fn find_hwnd(classname : &str, windowname : Option<&str>) -> HWND
+{
+    unsafe
+    {
+        let class = CString::new(classname).expect("");
+        let window = CString::new(windowname.unwrap_or("")).expect("");
+
+        // Not the most pretty but it IS a fix for None values in window name.
+        return match windowname 
+        {
+            Some(_val) => winuser::FindWindowA(class.as_ptr(), window.as_ptr()),
+            None => winuser::FindWindowA(class.as_ptr(), std::ptr::null())
+        };
+    }
+}
+
+fn place_window_under_taskbar(window : HWND, pos : i32)
+{
+    if window.is_null()
+    {
+        return; // no handle no action
+    }
+
+    unsafe
+    {
+        let mut window_rect : RECT = zeroed();
+        let mut client_rect : RECT = zeroed();
+
+        winuser::GetWindowRect(window, &mut window_rect);
+        winuser::GetClientRect(window, &mut client_rect);
+
+        // set new position
+        if window_rect.top != pos // 48 is the height of the taskbar
+        {
+            // if the y pos changed, we can be sure the window moved.
+            winuser::SetWindowPos(window, winuser::HWND_TOP, window_rect.left, pos, client_rect.right, client_rect.bottom, 0);
         }
     }
 }
