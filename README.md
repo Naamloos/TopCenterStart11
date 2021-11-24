@@ -1,7 +1,7 @@
 # TopCenterStart11
 A small utility that moves the start menu to the top-center of the screen in Windows 11.
 
-As of right now, this application can only place the start menu at the top-center of the screen. Screen size is calculated dynamically, but I've only been able to test this on a 1920x1080 screen. I have not found a fix for the desktop switcher yet, but I am still looking into it.
+As of right now, this application can only place the start menu at the top-center of the primary screen. Screen size is calculated dynamically, but I've only been able to test this on a 1920x1080 screen. This also fixes any issues with taskbar thumbnails and the desktop switcher.
 
 ## How to use?
 This Utility does not move your taskbar for you. You'll have to do the registry edits yourself (for now).
@@ -27,7 +27,10 @@ Then you don't really need this tool, as this matches the default behavior of th
 I don't think I can actually fix that, but feel free to [prove me wrong](https://github.com/Naamloos/TopCenterStart11/pulls)!
 
 ### I want to stop using the application!
-Remove the shortcut from your `shell:startup` folder and restart explorer. The change will revert and it will not be reflected on reboot.
+Remove the shortcut from your `shell:startup` folder and reboot. The changes will revert and it will not be reflected on reboot.
+
+### The action center isn't vertically aligned right!
+I am still looking into a way to fix this. As of right now I have been unable to fix this. [Any help is welcome!](https://github.com/Naamloos/TopCenterStart11/pulls)
 
 ## Screenshot
 ![](https://i.imgur.com/Ud0IKO2.png)
