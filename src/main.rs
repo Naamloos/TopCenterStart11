@@ -1,8 +1,12 @@
 //#![windows_subsystem = "windows"] // yeah I know this is a bit weird but it hides the console
 
+extern crate single_instance;
+
+use single_instance::SingleInstance;
+
 use std::mem::zeroed;
 use std::ffi::CString;
-use std::{thread, time};
+use std::{thread, time, process};
 
 use winapi::shared::windef::HWND;
 use winapi::um::winuser;
@@ -10,6 +14,12 @@ use winapi::shared::windef::RECT;
 
 fn main() 
 {
+
+    let instance = SingleInstance::new("TopCenterStart11").unwrap();
+    if !instance.is_single() {
+        process::exit(0x0100);
+    }
+    
     println!("Let's fix what Microsoft couldn't!");
 
     unsafe
