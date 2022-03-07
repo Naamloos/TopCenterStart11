@@ -3,6 +3,8 @@ A small utility that moves the start menu to the top-center of the screen in Win
 
 As of right now, this application can only place the start menu at the top-center of the primary screen. Screen size is calculated dynamically, but I've only been able to test this on a 1920x1080 screen. This also fixes any issues with taskbar thumbnails and the desktop switcher.
 
+It also fixes the issue that in a stock Windows 11 install, when the taskbar is hacked to the top of the screen, the preview windows that pop up when you hover over a program icon pops up ABOVE the top of the screen. That means they cannot be seen or clicked, and a minimized window cannot be re-opened. This utility causes those to show ON the screen, restoring functionality.
+
 ## How to use?
 This Utility does not move your taskbar for you. You'll have to do the registry edits yourself (for now).
 
