@@ -28,6 +28,9 @@ Feel free to join my personal Discord to discuss the project!
 [![Discord](https://discord.com/api/guilds/438803108978753536/embed.png?style=banner2)](https://discord.gg/hMRWUTa)
 
 ## 💭 Q & A
+### ❓ My working area is all goofed after removing the tool!
+A manual restart of explorer.exe via taskmanager or a full reboot should fix it. It's a bit of a bug that I can't really fix easily. It's nothing major and it's not persistent.
+
 ### ❓ My taskbar is left/right aligned!
 As of right now, this tool only places the start menu at the top of the screen. Adding support for other positions is planned, but as of right now only top-taskbar is supported.
 

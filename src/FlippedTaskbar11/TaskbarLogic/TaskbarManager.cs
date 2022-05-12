@@ -67,13 +67,9 @@ namespace TopCenterStart11.TaskbarLogics
             unsafe
             {
                 var working = new WIN32.RECT();
-                var working2 = new WIN32.RECT();
                 var pointer = &working;
-                var pointer2 = &working;
                 WIN32.SystemParametersInfo(WIN32.SPI_GETWORKAREA, 0, (IntPtr)pointer, 0);
-                WIN32.SystemParametersInfo(WIN32.SPI_GETWORKAREA, 0, (IntPtr)pointer2, 0);
                 workingArea = working;
-                originalWorkingArea = working2;
             }
 
             // new™️ and improved™️ working area
@@ -88,6 +84,16 @@ namespace TopCenterStart11.TaskbarLogics
         {
             if (!valid)
                 throw new Exception("This taskbar manager has already started once. Please onstruct a new one to restart it.");
+
+            // set new working area
+            unsafe
+            {
+                var working = workingArea;
+                var pointer = &working;
+                WIN32.SystemParametersInfo(WIN32.SPI_SETWORKAREA, 0, (IntPtr)pointer, 0x02);
+                workingArea = working;
+            }
+
             _ = Task.Run(doTaskbarLoopAsync, cancellationTokenSource.Token);
             _ = Task.Run(doWindowPlacementLoopAsync, cancellationTokenSource.Token);
 
@@ -100,18 +106,34 @@ namespace TopCenterStart11.TaskbarLogics
             {
                 try
                 {
+                    // refetch working area
+
+                    unsafe
+                    {
+                        var working = new WIN32.RECT();
+                        var pointer = &working;
+                        WIN32.SystemParametersInfo(WIN32.SPI_GETWORKAREA, 0, (IntPtr)pointer, 0);
+                        workingArea = working;
+                    }
+
+                    // old™️ and unimproved™️ working area
+                    workingArea.Top -= 48;
+                    workingArea.Bottom -= 48;
+
+                    unsafe
+                    {
+                        var working = workingArea;
+                        var pointer = &working;
+                        WIN32.SystemParametersInfo(WIN32.SPI_SETWORKAREA, 0, (IntPtr)pointer, 0x02);
+                        workingArea = working;
+                    }
+                    WIN32.UpdateWindow(taskbarHwnd);
+
                     this.cancellationTokenSource.Cancel();
                 }
                 finally
                 {
-                    unsafe
-                    {
-                        var working = originalWorkingArea;
-                        var pointer = &working;
-                        WIN32.SystemParametersInfo(WIN32.SPI_SETWORKAREA, 0, (IntPtr)pointer, 0x02);
-                    }
                 }
-
                 stopped = true;
             }
         }
@@ -125,20 +147,9 @@ namespace TopCenterStart11.TaskbarLogics
                 // Set new position for taskbar
                 WIN32.SetWindowPos(taskbarHwnd, (IntPtr)1, taskbarWindowRect.Left, 0,
                     taskbarWindowRect.Right, taskbarClientRect.Bottom, 0x0400);
-                // show window
-                //WIN32.ShowWindow(taskbarHwnd, 5);
-                // Apparently this forces the taskbar to refresh so let's now lmao
-                // update taskbar window
-                WIN32.UpdateWindow(taskbarHwnd);
 
-                // set new working area
-                unsafe
-                {
-                    var working = workingArea;
-                    var pointer = &working;
-                    WIN32.SystemParametersInfo(WIN32.SPI_SETWORKAREA, 0, (IntPtr)pointer, 0x02);
-                    workingArea = working;
-                }
+                // Update taskbar
+                WIN32.UpdateWindow(taskbarHwnd);
 
                 if(config.PollingRate > 0)
                     await Task.Delay(config.PollingRate);
