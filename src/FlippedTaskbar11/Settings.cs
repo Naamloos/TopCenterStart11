@@ -121,7 +121,10 @@ namespace TopCenterStart11
                     key.DeleteValue(REGISTRY_ITEM, false);
                 }
 
-                key.SetValue(REGISTRY_ITEM, Assembly.GetEntryAssembly().Location);
+                var path = Assembly.GetEntryAssembly().Location;
+                if (path.EndsWith(".dll"))
+                    path = path.Replace(".dll", ".exe");
+                key.SetValue(REGISTRY_ITEM, path);
             }
 
             config.FirstRun = false;
