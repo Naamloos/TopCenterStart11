@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32505.173
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TopCenterStart11", "FlippedTaskbar11\TopCenterStart11.csproj", "{E5DD7A89-AFD9-40FB-B24C-7B276F80A80A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E5DD7A89-AFD9-40FB-B24C-7B276F80A80A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5DD7A89-AFD9-40FB-B24C-7B276F80A80A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5DD7A89-AFD9-40FB-B24C-7B276F80A80A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5DD7A89-AFD9-40FB-B24C-7B276F80A80A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {98E63F1A-20F2-4FEE-9DDD-2DE3FEA90210}
+	EndGlobalSection
+EndGlobal
