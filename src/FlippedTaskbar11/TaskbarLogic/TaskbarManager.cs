@@ -1,4 +1,4 @@
-﻿using FlippedTaskbar11.TaskbarLogic;
+﻿using TopCenterStart11.TaskbarLogic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlippedTaskbar11.TaskbarLogics
+namespace TopCenterStart11.TaskbarLogics
 {
     internal class TaskbarManager
     {
@@ -25,23 +25,24 @@ namespace FlippedTaskbar11.TaskbarLogics
 
         public const int TASKBAR_HEIGHT = 48;
 
-        public const int POLLING_RATE_MS = 100;
+        private Config config;
 
         private IntPtr startHwnd;
         private IntPtr thumbnailHwnd;
         private IntPtr taskbarHwnd;
         private IntPtr switcherHwnd;
 
-        WIN32.DEVMODE devmode;
-        WIN32.RECT workingArea;
+        private WIN32.DEVMODE devmode;
+        private WIN32.RECT workingArea;
 
-        WIN32.RECT taskbarWindowRect;
-        WIN32.RECT taskbarClientRect;
+        private WIN32.RECT taskbarWindowRect;
+        private WIN32.RECT taskbarClientRect;
 
         private CancellationTokenSource cancellationTokenSource;
 
-        public TaskbarManager()
+        public TaskbarManager(Config config)
         {
+            this.config = config;
             cancellationTokenSource = new CancellationTokenSource();
 
             // pre-fetch windows on launch.
@@ -102,7 +103,7 @@ namespace FlippedTaskbar11.TaskbarLogics
                 // update taskbar window
                 WIN32.UpdateWindow(taskbarHwnd);
                 // Set new position for taskbar
-                WIN32.SetWindowPos(taskbarHwnd, IntPtr.Zero, taskbarWindowRect.Left, 0,
+                WIN32.SetWindowPos(taskbarHwnd, (IntPtr)1, taskbarWindowRect.Left, 0,
                     taskbarWindowRect.Right, taskbarClientRect.Bottom, 0x0400);
                 // show window
                 //WIN32.ShowWindow(taskbarHwnd, 5);
@@ -119,8 +120,8 @@ namespace FlippedTaskbar11.TaskbarLogics
                     workingArea = working;
                 }
 
-                if(POLLING_RATE_MS > 0)
-                    await Task.Delay(POLLING_RATE_MS);
+                if(config.PollingRate > 0)
+                    await Task.Delay(config.PollingRate);
             } 
             while (!cancellationTokenSource.IsCancellationRequested);
         }
@@ -137,8 +138,8 @@ namespace FlippedTaskbar11.TaskbarLogics
                 placeUnderTaskbar(thumbnailHwnd);
                 placeStart(startHwnd);
 
-                if (POLLING_RATE_MS > 0)
-                    await Task.Delay(POLLING_RATE_MS);
+                if (config.PollingRate > 0)
+                    await Task.Delay(config.PollingRate);
             }
             while (!cancellationTokenSource.IsCancellationRequested);
         }

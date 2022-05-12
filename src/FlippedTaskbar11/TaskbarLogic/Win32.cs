@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlippedTaskbar11.TaskbarLogic
+namespace TopCenterStart11.TaskbarLogic
 {
     public static class WIN32
     {
