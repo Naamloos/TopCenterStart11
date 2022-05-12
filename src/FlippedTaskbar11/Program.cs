@@ -8,6 +8,11 @@ namespace TopCenterStart11
         [STAThread]
         static void Main()
         {
+            // Thanks stackoverflow for this one https://stackoverflow.com/a/6392077/8468356
+            var exists = System.Diagnostics.Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(System.Reflection.Assembly.GetEntryAssembly().Location)).Count() > 1;
+            if (exists)
+                return;
+
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
