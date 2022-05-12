@@ -1,17 +1,19 @@
 # TopCenterStart11
 TopCenterStart11 is small utility that moves the start menu and Taskbar to the top-center of the screen in Windows 11.
 
-It also fixes the issue that in a stock Windows 11 install, when the taskbar is hacked to the top of the screen, the preview windows that pop up when you hover over a program icon pops up ABOVE the top of the screen. That means they cannot be seen or clicked, and a minimized window cannot be re-opened. This utility causes those to show ON screen, restoring functionality.
+## 🤔 What does it do?
+This tool moves the taskbar to the top of the screen without registry hacks, restoring behavior that has been removed by Microsoft. Along with this, it also fixes some positioning issues that already existed with the registry hack. The start menu, window previews and desktop switcher now appear at the right spot.
 
 ## 📃 How to use?
 TopCenterStart11 changes some behavior of the Taskbar and it's components. To consistently launch the application at bootup, some configuration has to be done. Please read the following carefully:
 
-1. Download the latest version from the [Releases](https://github.com/Naamloos/TopCenterStart11/releases) page.
-2. Place the EXE at any location on your system. Preferrably it's own dedicated folder.
-3. Launch the application.
-4. Double click the icon that appeared in your system tray.
-5. Click "Enable Autostart".
-6. Profit!
+1. Ensure you don't have the registry hack enabled (if your OS still supports this).
+2. Download the latest version from the [Releases](https://github.com/Naamloos/TopCenterStart11/releases) page.
+3. Place the EXE at any location on your system. Preferrably it's own dedicated folder.
+4. Launch the application.
+5. Double click the icon that appeared in your system tray.
+6. Click "Enable Autostart".
+7. Profit! 🥳
 
 Now, the application should run at startup. Have fun 😊💕
 
@@ -20,22 +22,10 @@ If this application has been useful to you in any way whatsoever, feel free to b
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/V7V09Q1I)
 
-## ⭐ Other software that works well with TopCenterStart11
-### Windows11DragAndDropToTaskbarFix
-Download: https://github.com/HerMajestyDrMona/Windows11DragAndDropToTaskbarFix
+## ✨ Discord
+Feel free to join my personal Discord to discuss the project!
 
-**NOTE**: When the taskbar is on top, the Windows11DragAndDropToTaskbarFix works better when the following [configuration line](https://github.com/HerMajestyDrMona/Windows11DragAndDropToTaskbarFix/blob/main/CONFIGURATION.md) is added:
-```
-DetectKnownPixelColorsToPreventAccidentalEvents=0
-```
-Extra details: https://github.com/HerMajestyDrMona/Windows11DragAndDropToTaskbarFix/issues/70#issuecomment-1061368908
-
-💫 Special thanks to [HerMajestyDrMona](https://github.com/HerMajestyDrMona) 💫
-
-### Taskbar11
-Download: https://github.com/jetspiking/Taskbar11
-
-💫 Special thanks to [jetspiking](https://github.com/jetspiking/) 💫
+[![Discord](https://discord.com/api/guilds/438803108978753536/embed.png?style=banner2)](https://discord.gg/hMRWUTa)
 
 ## 💭 Q & A
 ### ❓ My taskbar is left/right aligned!
@@ -55,4 +45,32 @@ I am still looking into a way to fix this. As of right now I have been unable to
 
 ## 📸 Screenshot
 This is a screenshot of the OLD app, but behavior hasn't changed so this is still accurate.
+
 ![](https://i.imgur.com/Ud0IKO2.png)
+
+## ⭐ Other software that works well with TopCenterStart11 ⭐ 
+### Windows11DragAndDropToTaskbarFix
+Download: https://github.com/HerMajestyDrMona/Windows11DragAndDropToTaskbarFix
+
+**NOTE**: When the taskbar is on top, the Windows11DragAndDropToTaskbarFix works better when the following [configuration line](https://github.com/HerMajestyDrMona/Windows11DragAndDropToTaskbarFix/blob/main/CONFIGURATION.md) is added:
+```
+DetectKnownPixelColorsToPreventAccidentalEvents=0
+```
+Extra details: https://github.com/HerMajestyDrMona/Windows11DragAndDropToTaskbarFix/issues/70#issuecomment-1061368908
+
+💫 Special thanks to [HerMajestyDrMona](https://github.com/HerMajestyDrMona) 💫
+
+### Taskbar11
+Download: https://github.com/jetspiking/Taskbar11
+
+💫 Special thanks to [jetspiking](https://github.com/jetspiking/) 💫
+
+### RoundedTB
+Download: https://github.com/torchgm/RoundedTB
+
+💫 Special thanks to [jetspiking](https://github.com/torchgm/) 💫
+
+### TranslucentTB
+Download: https://github.com/TranslucentTB/TranslucentTB
+
+💫 Special thanks to [sylveon](https://github.com/sylveon) 💫
