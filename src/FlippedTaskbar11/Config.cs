@@ -24,19 +24,31 @@ namespace TopCenterStart11
         public void Save()
         {
             using FileStream fs = getFile();
+            File.WriteAllText(fs.Name, "");
             fs.Position = 0;
             JsonSerializer.Serialize(fs, this);
         }
 
         public static Config Load()
         {
-            if (instance == null)
+            try
             {
-                using FileStream fs = getFile();
-                instance = JsonSerializer.Deserialize<Config>(fs, new JsonSerializerOptions());
-            }
+                if (instance == null)
+                {
+                    using FileStream fs = getFile();
+                    instance = JsonSerializer.Deserialize<Config>(fs, new JsonSerializerOptions());
+                }
 
-            return instance;
+                return instance;
+            }
+            catch(Exception)
+            {
+                MessageBox.Show("Your config appears to have been written by JJ Abrams and corrected by Rian Johnson! Please delete it.\n" +
+                    "Only touch your config manually if you REALLY know what you are doing.\n\n" +
+                    $"Anyway, the file is located here:\n{Path.GetFullPath(CONFIGFILE)}",
+                    "Somehow, Palpatine returned...");
+                return null;
+            }
         }
 
         private static FileStream getFile()

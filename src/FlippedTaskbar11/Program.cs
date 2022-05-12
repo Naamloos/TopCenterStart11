@@ -13,6 +13,12 @@ namespace TopCenterStart11
             if (exists)
                 return;
 
+            // validating config
+            if (Config.Load() == null)
+            {
+                return;
+            }
+
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();

@@ -19,6 +19,7 @@ namespace TopCenterStart11
             InitializeComponent();
 
             config = Config.Load();
+
             setAppropriateAutoStartText();
             taskbar = new TaskbarManager(config);
 
@@ -49,7 +50,9 @@ namespace TopCenterStart11
 
         private void onTrayExit(object? sender, EventArgs eventargs)
         {
-            taskbar.StopTaskbarLoop();
+            if(taskbar != null)
+                taskbar.StopTaskbarLoop();
+
             this.Dispose();
             Application.Exit();
         }
