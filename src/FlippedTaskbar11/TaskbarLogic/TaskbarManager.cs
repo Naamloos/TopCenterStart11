@@ -34,11 +34,14 @@ namespace TopCenterStart11.TaskbarLogics
 
         private WIN32.DEVMODE devmode;
         private WIN32.RECT workingArea;
+        private WIN32.RECT originalWorkingArea;
 
         private WIN32.RECT taskbarWindowRect;
         private WIN32.RECT taskbarClientRect;
 
         private CancellationTokenSource cancellationTokenSource;
+        private bool valid = true;
+        private bool stopped = false;
 
         public TaskbarManager(Config config)
         {
@@ -64,9 +67,13 @@ namespace TopCenterStart11.TaskbarLogics
             unsafe
             {
                 var working = new WIN32.RECT();
+                var working2 = new WIN32.RECT();
                 var pointer = &working;
+                var pointer2 = &working;
                 WIN32.SystemParametersInfo(WIN32.SPI_GETWORKAREA, 0, (IntPtr)pointer, 0);
+                WIN32.SystemParametersInfo(WIN32.SPI_GETWORKAREA, 0, (IntPtr)pointer2, 0);
                 workingArea = working;
+                originalWorkingArea = working2;
             }
 
             // new™️ and improved™️ working area
@@ -79,21 +86,34 @@ namespace TopCenterStart11.TaskbarLogics
 
         public void StartTaskbarLoop()
         {
+            if (!valid)
+                throw new Exception("This taskbar manager has already started once. Please onstruct a new one to restart it.");
             _ = Task.Run(doTaskbarLoopAsync, cancellationTokenSource.Token);
             _ = Task.Run(doWindowPlacementLoopAsync, cancellationTokenSource.Token);
+
+            valid = false;
         }
 
         public void StopTaskbarLoop()
         {
-            try
+            if (!stopped && !valid)
             {
-                this.cancellationTokenSource.Cancel();
-            }
-            finally
-            {
+                try
+                {
+                    this.cancellationTokenSource.Cancel();
+                }
+                finally
+                {
+                    unsafe
+                    {
+                        var working = originalWorkingArea;
+                        var pointer = &working;
+                        WIN32.SystemParametersInfo(WIN32.SPI_SETWORKAREA, 0, (IntPtr)pointer, 0x02);
+                    }
+                }
 
+                stopped = true;
             }
-            // TODO recover original placements
         }
 
         private async Task doTaskbarLoopAsync()
