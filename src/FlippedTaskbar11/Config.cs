@@ -16,6 +16,8 @@ namespace TopCenterStart11
 
         public int PollingRate { get; set; } = 100;
 
+        public bool FirstRun { get; set; } = true;
+
         /// <summary>
         /// Do not call the constructor manually. Call Config.Load() instead.
         /// </summary>
@@ -23,10 +25,9 @@ namespace TopCenterStart11
 
         public void Save()
         {
-            using FileStream fs = getFile();
-            File.WriteAllText(fs.Name, "");
-            fs.Position = 0;
+            using FileStream fs = getFile(true);
             JsonSerializer.Serialize(fs, this);
+            fs.Dispose();
         }
 
         public static Config Load()
@@ -51,15 +52,18 @@ namespace TopCenterStart11
             }
         }
 
-        private static FileStream getFile()
+        private static FileStream getFile(bool clear = false)
         {
-            if (!File.Exists("config.json"))
+            if (!File.Exists(CONFIGFILE))
             {
-                var fs = File.Create("config.json");
+                var fs = File.Create(CONFIGFILE);
                 StreamWriter sw = new StreamWriter(fs);
                 sw.Write(JsonSerializer.Serialize(new Config()));
                 sw.Dispose();
             }
+
+            if (clear)
+                File.WriteAllText(CONFIGFILE, "");
                 
             return File.Open("config.json", FileMode.OpenOrCreate);
         }

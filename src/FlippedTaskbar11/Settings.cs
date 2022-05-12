@@ -20,6 +20,9 @@ namespace TopCenterStart11
 
             config = Config.Load();
 
+            if (config.FirstRun)
+                doSetupStuff();
+
             setAppropriateAutoStartText();
             taskbar = new TaskbarManager(config);
 
@@ -85,6 +88,8 @@ namespace TopCenterStart11
             // Copy config values from the UI to the config and save
             config.PollingRate = (int)pollingRate.Value;
             config.Save();
+
+            MessageBox.Show("Your configuration has been saved.");
         }
 
         private void setAppropriateAutoStartText()
@@ -98,6 +103,29 @@ namespace TopCenterStart11
             RegistryKey key = Registry.CurrentUser.OpenSubKey(path, true);
 
             return key.GetValueNames().Contains(REGISTRY_ITEM);
+        }
+
+        private void doSetupStuff()
+        {
+            var dialog = MessageBox.Show("Welcome!\nThis is your first time running TopCenterStart11." +
+                "\n\nWould you like to Enable Autostart?\n" +
+                "You can always change this via the settings (tray icon will display in a bit).", 
+                "Welcome to TopCenterStart11!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if(dialog == DialogResult.Yes)
+            {
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(REGISTRY_AUTOSTART_PATH, true);
+
+                if (getAutoStartEnabled())
+                {
+                    key.DeleteValue(REGISTRY_ITEM, false);
+                }
+
+                key.SetValue(REGISTRY_ITEM, Assembly.GetEntryAssembly().Location);
+            }
+
+            config.FirstRun = false;
+            config.Save();
         }
     }
 }
