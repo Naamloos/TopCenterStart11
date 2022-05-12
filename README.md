@@ -8,12 +8,13 @@ This tool moves the taskbar to the top of the screen without registry hacks, res
 TopCenterStart11 changes some behavior of the Taskbar and it's components. To consistently launch the application at bootup, some configuration has to be done. Please read the following carefully:
 
 1. Ensure you don't have the registry hack enabled (if your OS still supports this).
-2. Download the latest version from the [Releases](https://github.com/Naamloos/TopCenterStart11/releases) page.
-3. Place the EXE at any location on your system. Preferrably it's own dedicated folder.
-4. Launch the application.
-5. Double click the icon that appeared in your system tray.
-6. Click "Enable Autostart".
+2. Ensure the [.NET 6 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) is installed. (Pick Windows->x64, as Windows 11 no longer supports x86 as far as I am aware)
+3. Download the latest version from the [Releases](https://github.com/Naamloos/TopCenterStart11/releases) page.
+4. Place the EXE at any location on your system. Preferrably it's own dedicated folder.
+5. Launch the application.
+6. Tell the app whether you want to autostart it or not
 7. Profit! 🥳
+8. (Optional) Right click the tray icon and click `Exit` to exit.
 
 Now, the application should run at startup. Have fun 😊💕
 
