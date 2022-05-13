@@ -21,6 +21,9 @@ namespace TopCenterStart11.TaskbarLogics
 
         public const string TASKBAR_CLASS = "Shell_TrayWnd";
 
+        public const string POPUP_TITLE = "PopupHost";
+        public const string POPUP_CLASS = "Xaml_WindowedPopupClass";
+
         public const int START_WIDTH = 666;
         public const int START_HEIGHT = 750;
 
@@ -134,19 +137,7 @@ namespace TopCenterStart11.TaskbarLogics
                 }
                 finally
                 {
-                    var explorers = Process.GetProcesses()
-                        .Where(x => x.MainModule.FileName.ToLower().EndsWith(":\\windows\\explorer.exe"));
-
-                    foreach (var explorer in explorers)
-                    {
-                        try
-                        {
-                            explorer.Kill();
-                        }
-                        catch (Exception) { }
-                    }
-
-                    Process.Start("explorer.exe");
+                    restartExplorer();
                 }
                 stopped = true;
             }
@@ -206,6 +197,39 @@ namespace TopCenterStart11.TaskbarLogics
         {
             var x_pos = (devmode.dmPelsWidth / 2) - (START_WIDTH / 2);
             WIN32.SetWindowPos(hwnd, IntPtr.Zero, x_pos, TASKBAR_HEIGHT, START_WIDTH, START_HEIGHT, 0);
+        }
+
+        private void restartExplorer()
+        {
+            try
+            {
+                var ptr = WIN32.FindWindowA(TASKBAR_CLASS, null);
+                Console.WriteLine("INIT PTR: {0}", ptr.ToInt32());
+                WIN32.PostMessage(ptr, WIN32.WM_USER + 436, (IntPtr)0, (IntPtr)0);
+
+                do
+                {
+                    ptr = WIN32.FindWindowA(TASKBAR_CLASS, null);
+                    Console.WriteLine("PTR: {0}", ptr.ToInt32());
+
+                    if (ptr.ToInt32() == 0)
+                        break;
+
+                    Thread.Sleep(1000);
+                } while (true);
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                string explorer = string.Format("{0}\\{1}", Environment.GetEnvironmentVariable("WINDIR"), "explorer.exe");
+
+                var startInfo = new ProcessStartInfo(explorer);
+                startInfo.UseShellExecute = true;
+                Process.Start(startInfo);
+                Environment.Exit(0);
+            }
         }
     }
 }

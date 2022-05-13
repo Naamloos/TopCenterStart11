@@ -42,6 +42,11 @@ namespace TopCenterStart11.TaskbarLogic
         [DllImport("user32.dll")]
         public static extern bool UpdateWindow(IntPtr hWnd);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool PostMessage(IntPtr hWnd, [MarshalAs(UnmanagedType.U4)] uint Msg, IntPtr wParam, IntPtr lParam);
+
+        public const int WM_USER = 0x0400;
+
         #region SPI consts
         public const uint SPI_GETBEEP = 0x0001;
         public const uint SPI_SETBEEP = 0x0002;
