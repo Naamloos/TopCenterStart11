@@ -145,7 +145,7 @@ namespace TopCenterStart11.TaskbarLogics
                 // update taskbar window
                 WIN32.UpdateWindow(taskbarHwnd);
                 // Set new position for taskbar
-                WIN32.SetWindowPos(taskbarHwnd, (IntPtr)1, taskbarWindowRect.Left, 0,
+                WIN32.SetWindowPos(taskbarHwnd, IntPtr.Parse("-1"), taskbarWindowRect.Left, 0,
                     taskbarWindowRect.Right, taskbarClientRect.Bottom, 0x0400);
 
                 // Update taskbar
