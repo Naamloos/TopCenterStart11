@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace TopCenterStart11.TaskbarLogics
 {
@@ -133,6 +134,19 @@ namespace TopCenterStart11.TaskbarLogics
                 }
                 finally
                 {
+                    var explorers = Process.GetProcesses()
+                        .Where(x => x.MainModule.FileName.ToLower().EndsWith(":\\windows\\explorer.exe"));
+
+                    foreach (var explorer in explorers)
+                    {
+                        try
+                        {
+                            explorer.Kill();
+                        }
+                        catch (Exception) { }
+                    }
+
+                    Process.Start("explorer.exe");
                 }
                 stopped = true;
             }
