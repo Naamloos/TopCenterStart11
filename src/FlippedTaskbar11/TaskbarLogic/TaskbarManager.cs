@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace TopCenterStart11.TaskbarLogics
 {
@@ -19,6 +20,9 @@ namespace TopCenterStart11.TaskbarLogics
         public const string DESKTOP_SWITCHER_TITLE = "";
 
         public const string TASKBAR_CLASS = "Shell_TrayWnd";
+
+        public const string POPUP_TITLE = "PopupHost";
+        public const string POPUP_CLASS = "Xaml_WindowedPopupClass";
 
         public const int START_WIDTH = 666;
         public const int START_HEIGHT = 750;
@@ -133,6 +137,7 @@ namespace TopCenterStart11.TaskbarLogics
                 }
                 finally
                 {
+                    restartExplorer();
                 }
                 stopped = true;
             }
@@ -145,7 +150,7 @@ namespace TopCenterStart11.TaskbarLogics
                 // update taskbar window
                 WIN32.UpdateWindow(taskbarHwnd);
                 // Set new position for taskbar
-                WIN32.SetWindowPos(taskbarHwnd, (IntPtr)1, taskbarWindowRect.Left, 0,
+                WIN32.SetWindowPos(taskbarHwnd, IntPtr.Parse("-1"), taskbarWindowRect.Left, 0,
                     taskbarWindowRect.Right, taskbarClientRect.Bottom, 0x0400);
 
                 // Update taskbar
@@ -192,6 +197,39 @@ namespace TopCenterStart11.TaskbarLogics
         {
             var x_pos = (devmode.dmPelsWidth / 2) - (START_WIDTH / 2);
             WIN32.SetWindowPos(hwnd, IntPtr.Zero, x_pos, TASKBAR_HEIGHT, START_WIDTH, START_HEIGHT, 0);
+        }
+
+        private void restartExplorer()
+        {
+            try
+            {
+                var ptr = WIN32.FindWindowA(TASKBAR_CLASS, null);
+                Console.WriteLine("INIT PTR: {0}", ptr.ToInt32());
+                WIN32.PostMessage(ptr, WIN32.WM_USER + 436, (IntPtr)0, (IntPtr)0);
+
+                do
+                {
+                    ptr = WIN32.FindWindowA(TASKBAR_CLASS, null);
+                    Console.WriteLine("PTR: {0}", ptr.ToInt32());
+
+                    if (ptr.ToInt32() == 0)
+                        break;
+
+                    Thread.Sleep(1000);
+                } while (true);
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                string explorer = string.Format("{0}\\{1}", Environment.GetEnvironmentVariable("WINDIR"), "explorer.exe");
+
+                var startInfo = new ProcessStartInfo(explorer);
+                startInfo.UseShellExecute = true;
+                Process.Start(startInfo);
+                Environment.Exit(0);
+            }
         }
     }
 }

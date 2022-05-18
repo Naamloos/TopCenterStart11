@@ -73,7 +73,10 @@ namespace TopCenterStart11
 
             if (!getAutoStartEnabled())
             {
-                key.SetValue(REGISTRY_ITEM, Assembly.GetEntryAssembly().Location);
+                var path = Assembly.GetEntryAssembly().Location;
+                if (path.EndsWith(".dll"))
+                    path = path.Replace(".dll", ".exe");
+                key.SetValue(REGISTRY_ITEM, path);
             }
             else
             {

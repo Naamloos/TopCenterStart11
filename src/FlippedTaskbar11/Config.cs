@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -54,18 +55,19 @@ namespace TopCenterStart11
 
         private static FileStream getFile(bool clear = false)
         {
-            if (!File.Exists(CONFIGFILE))
+            var configPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), CONFIGFILE);
+            if (!File.Exists(configPath))
             {
-                var fs = File.Create(CONFIGFILE);
+                var fs = File.Create(configPath);
                 StreamWriter sw = new StreamWriter(fs);
                 sw.Write(JsonSerializer.Serialize(new Config()));
                 sw.Dispose();
             }
 
             if (clear)
-                File.WriteAllText(CONFIGFILE, "");
+                File.WriteAllText(configPath, "");
                 
-            return File.Open("config.json", FileMode.OpenOrCreate);
+            return File.Open(configPath, FileMode.OpenOrCreate);
         }
     }
 }
