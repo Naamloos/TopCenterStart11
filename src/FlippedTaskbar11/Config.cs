@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace TopCenterStart11
 {
-    internal class Config
+    public class Config
     {
         const string CONFIGFILE = "config.json";
 
@@ -18,6 +18,8 @@ namespace TopCenterStart11
         public int PollingRate { get; set; } = 100;
 
         public bool FirstRun { get; set; } = true;
+
+        public string LastCheck { get; set; } = "";
 
         /// <summary>
         /// Do not call the constructor manually. Call Config.Load() instead.

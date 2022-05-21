@@ -14,11 +14,11 @@ namespace TopCenterStart11
         private Config config;
         private TaskbarManager taskbar;
 
-        public SettingsForm()
+        public SettingsForm(Config config)
         {
             InitializeComponent();
 
-            config = Config.Load();
+            this.config = config;
 
             if (config.FirstRun)
                 doSetupStuff();
