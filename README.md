@@ -72,7 +72,7 @@ Download: https://github.com/jetspiking/Taskbar11
 ### RoundedTB
 Download: https://github.com/torchgm/RoundedTB
 
-💫 Special thanks to [jetspiking](https://github.com/torchgm/) 💫
+💫 Special thanks to [torchgm](https://github.com/torchgm/) 💫
 
 ### TranslucentTB
 Download: https://github.com/TranslucentTB/TranslucentTB
