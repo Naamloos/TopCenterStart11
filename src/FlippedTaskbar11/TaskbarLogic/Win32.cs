@@ -4,12 +4,8 @@
  
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace TopCenterStart11.TaskbarLogic
 {
@@ -24,6 +20,14 @@ namespace TopCenterStart11.TaskbarLogic
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam, uint fWinIni);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SystemParametersInfo(
+            uint uiAction,
+            uint uiParam,
+            ref RECT pvParam,
+            uint fWinIni);
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
@@ -44,6 +48,145 @@ namespace TopCenterStart11.TaskbarLogic
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool PostMessage(IntPtr hWnd, [MarshalAs(UnmanagedType.U4)] uint Msg, IntPtr wParam, IntPtr lParam);
+        
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern IntPtr FindWindowEx(
+            IntPtr hwndParent,
+            IntPtr hwndChildAfter,
+            string lpszClass,
+            string lpszWindow);
+
+        [DllImport("User32.dll", EntryPoint = "EnumDisplayDevicesA")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool EnumDisplayDevices(
+            string lpDevice,
+            uint iDevNum,
+            ref DISPLAY_DEVICE lpDisplayDevice,
+            uint dwFlags);
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        public struct DISPLAY_DEVICE
+        {
+            public uint cb;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+            public string DeviceName;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+            public string DeviceString;
+
+            public DISPLAY_DEVICE_FLAG StateFlags;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+            public string DeviceID;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+            public string DeviceKey;
+        }
+
+        [Flags]
+        public enum DISPLAY_DEVICE_FLAG : uint
+        {
+            DISPLAY_DEVICE_ATTACHED_TO_DESKTOP = 0x00000001,
+            DISPLAY_DEVICE_MULTI_DRIVER = 0x00000002,
+            DISPLAY_DEVICE_PRIMARY_DEVICE = 0x00000004,
+            DISPLAY_DEVICE_MIRRORING_DRIVER = 0x00000008,
+            DISPLAY_DEVICE_VGA_COMPATIBLE = 0x00000010,
+            DISPLAY_DEVICE_REMOVABLE = 0x00000020,
+            DISPLAY_DEVICE_ACC_DRIVER = 0x00000040,
+            DISPLAY_DEVICE_RDPUDD = 0x01000000,
+            DISPLAY_DEVICE_DISCONNECT = 0x02000000,
+            DISPLAY_DEVICE_REMOTE = 0x04000000,
+            DISPLAY_DEVICE_MODESPRUNED = 0x08000000,
+
+            DISPLAY_DEVICE_ACTIVE = 0x00000001,
+            DISPLAY_DEVICE_ATTACHED = 0x00000002,
+        }
+
+        internal const uint EDD_GET_DEVICE_INTERFACE_NAME = 0x00000001;
+
+        [DllImport("User32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public extern static bool EnumWindows(
+            EnumWindowsProc lpEnumFun,
+            IntPtr lparam);
+
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public delegate bool EnumWindowsProc(
+            IntPtr hWnd,
+            IntPtr lParam);
+
+        [DllImport("User32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int GetClassName(
+            IntPtr hWnd,
+            StringBuilder lpClassName,
+            int nMaxCount);
+        
+        [DllImport("User32.dll", SetLastError = true)]
+        public static extern IntPtr MonitorFromWindow(
+            IntPtr hWnd,
+            MONITOR_DEFAULTTO dwFlags);
+
+        public enum MONITOR_DEFAULTTO : uint
+        {
+            /// <summary>
+            /// If no display monitor intersects, returns null.
+            /// </summary>
+            MONITOR_DEFAULTTONULL = 0x00000000,
+
+            /// <summary>
+            /// If no display monitor intersects, returns a handle to the primary display monitor.
+            /// </summary>
+            MONITOR_DEFAULTTOPRIMARY = 0x00000001,
+
+            /// <summary>
+            /// If no display monitor intersects, returns a handle to the display monitor that is nearest to the rectangle.
+            /// </summary>
+            MONITOR_DEFAULTTONEAREST = 0x00000002,
+        }
+
+        [DllImport("User32.dll", EntryPoint = "GetMonitorInfoW")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetMonitorInfo(
+            IntPtr hMonitor,
+            ref MONITORINFOEX lpmi);
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public struct MONITORINFOEX
+        {
+            public uint cbSize;
+            public RECT rcMonitor;
+            public RECT rcWork;
+            public uint dwFlags;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+            public string szDevice;
+        }
+
+        [return: MarshalAs(UnmanagedType.Bool)]
+        [DllImport("user32.dll",SetLastError = true)]
+        public static extern bool GetWindowInfo(IntPtr hwnd, ref WINDOWINFO pwi);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct WINDOWINFO
+        {
+            public uint        cbSize;
+            public RECT        rcWindow;
+            public RECT        rcClient;
+            public uint        dwStyle;
+            public uint        dwExStyle;
+            public uint        dwWindowStatus;
+            public uint        cxWindowBorders;
+            public uint        cyWindowBorders;
+            public Int32       atomWindowType;
+            public Int32       wCreatorVersion;
+        }
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern int GetWindowTextLength(IntPtr hWnd);
 
         public const int WM_USER = 0x0400;
 
@@ -218,7 +361,7 @@ namespace TopCenterStart11.TaskbarLogic
         public const uint SPI_GETFONTSMOOTHINGORIENTATION = 0x2012;
         public const uint SPI_SETFONTSMOOTHINGORIENTATION = 0x2013;
         #endregion
-
+        
         #region DEVMODE
         [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi)]
         public struct DEVMODE
@@ -398,5 +541,8 @@ namespace TopCenterStart11.TaskbarLogic
             public int y;
         }
         #endregion
+
+        [DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr GetParent(IntPtr hWnd);
     }
 }
