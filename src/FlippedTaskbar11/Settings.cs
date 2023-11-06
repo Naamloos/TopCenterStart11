@@ -1,10 +1,9 @@
 using Microsoft.Win32;
 using System.Reflection;
+using TopCenterStart11.TaskbarLogic;
 
 namespace TopCenterStart11
 {
-    using TopCenterStart11.TaskbarLogic;
-
     public partial class SettingsForm : Form
     {
         const string ENABLE_AUTOSTART = "Enable Autostart";
