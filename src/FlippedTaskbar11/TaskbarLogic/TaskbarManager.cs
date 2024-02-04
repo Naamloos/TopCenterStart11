@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace TopCenterStart11.TaskbarLogics
 {
@@ -24,6 +25,9 @@ namespace TopCenterStart11.TaskbarLogics
         public const string POPUP_TITLE = "PopupHost";
         public const string POPUP_CLASS = "Xaml_WindowedPopupClass";
 
+        public const string TRAY_TITLE = "System tray overflow window.";
+        public const string TRAY_CLASS = "TopLevelWindowForOverflowXamlIsland";
+
         public const int START_WIDTH = 666;
         public const int START_HEIGHT = 750;
 
@@ -35,6 +39,7 @@ namespace TopCenterStart11.TaskbarLogics
         private IntPtr thumbnailHwnd;
         private IntPtr taskbarHwnd;
         private IntPtr switcherHwnd;
+        private IntPtr trayHwnd;
 
         private WIN32.DEVMODE devmode;
         private WIN32.RECT workingArea;
@@ -57,6 +62,7 @@ namespace TopCenterStart11.TaskbarLogics
             thumbnailHwnd = WIN32.FindWindowA(THUMBNAIL_CLASS, null);
             taskbarHwnd = WIN32.FindWindowA(TASKBAR_CLASS, null);
             switcherHwnd = WIN32.FindWindowA(DESKTOP_SWITCHER_CLASS, DESKTOP_SWITCHER_TITLE);
+            trayHwnd = WIN32.FindWindowA(TRAY_CLASS, TRAY_TITLE);
             // some of these are not persistent,
             // so they require polling (unfortunately)
             // these are stored class-wide anyway to prevent
@@ -87,14 +93,14 @@ namespace TopCenterStart11.TaskbarLogics
         public void StartTaskbarLoop()
         {
             if (!valid)
-                throw new Exception("This taskbar manager has already started once. Please onstruct a new one to restart it.");
+                throw new Exception("This taskbar manager has already started once. Please construct a new one to restart it.");
 
             // set new working area
             unsafe
             {
                 var working = workingArea;
                 var pointer = &working;
-                WIN32.SystemParametersInfo(WIN32.SPI_SETWORKAREA, 0, (IntPtr)pointer, 0x02);
+                WIN32.SystemParametersInfo(WIN32.SPI_SETWORKAREA, 0, (IntPtr)pointer, 0);
                 workingArea = working;
             }
 
@@ -170,6 +176,10 @@ namespace TopCenterStart11.TaskbarLogics
                 switcherHwnd = WIN32.FindWindowA(DESKTOP_SWITCHER_CLASS, DESKTOP_SWITCHER_TITLE);
                 if (switcherHwnd != IntPtr.Zero)
                     placeUnderTaskbar(switcherHwnd);
+
+                trayHwnd = WIN32.FindWindowA(TRAY_CLASS, TRAY_TITLE);
+                if (trayHwnd != IntPtr.Zero)
+                    placeUnderTaskbar(trayHwnd);
 
                 placeUnderTaskbar(thumbnailHwnd);
                 placeStart(startHwnd);
