@@ -1,6 +1,6 @@
 using Microsoft.Win32;
 using System.Reflection;
-using TopCenterStart11.TaskbarLogics;
+using TopCenterStart11.TaskbarLogic;
 
 namespace TopCenterStart11
 {
