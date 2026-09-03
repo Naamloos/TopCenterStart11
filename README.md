@@ -1,3 +1,6 @@
+> [!NOTE]  
+> As of update [kb5120998](https://support.microsoft.com/en-us/servicing/os/windows-11/2026/08/kb5120998-windows-11-24h2-25h2-update), Windows is adding back official support for moving the taskbar to the top of the screen (or left, right). This renders this tool useless thus I have chosen to discontinue it. It hasn't seen updates in years anyway. Thank you for using TopCenterStart11!
+
 # TopCenterStart11
 TopCenterStart11 is small utility that moves the start menu and Taskbar to the top-center of the screen in Windows 11.
 
